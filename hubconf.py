@@ -11,8 +11,7 @@ from pathlib import Path
 
 import torch
 
-from utils import select_device
-from utils import attempt_download
+from utils import attempt_download, date_modified, git_describe, select_device
 
 dependencies = ['torch', 'yaml']
 

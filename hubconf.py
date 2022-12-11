@@ -8,10 +8,12 @@ Usage:
 # Learned straight from YoloV7's hubconf.
 
 from pathlib import Path
-
 import torch
 
-from utils import attempt_download, date_modified, git_describe, select_device
+from utils import attempt_download
+from utils import date_modified
+from utils import git_describe
+from utils import select_device
 
 dependencies = ['torch', 'yaml']
 

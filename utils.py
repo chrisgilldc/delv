@@ -3,6 +3,10 @@ Utilities, borrowed from Yolov7
 """
 
 from pathlib import Path
+import subprocess
+import datetime
+import os
+import platform
 
 # Adapted version of yolov7's attempt_download
 def attempt_download(file, repo='chrisgilldc/delv'):

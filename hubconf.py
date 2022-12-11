@@ -27,7 +27,7 @@ def delivery_vehicles(verbose=True,device=None):
 		# Do we use a CUDA device?
 		device = select_device(('0' if torch.cuda.is_available() else 'cpu') if device is None else device)
 		# Set up the base yolov5 model
-		model = torch.hub.load('WongKinYiu/yolov7','yolov5s',classes=classes,device=device)
+		model = torch.hub.load('WongKinYiu/yolov7','yolov7',classes=classes,device=device)
 		# Fetch the custom weights
 		checkpoint_url = "https://www.jumpbeacon.net/dv_model/dv_latest.pt"
 		ckpt = torch.hub.load_state_dict_from_url(checkpoint_url,map_location=device)

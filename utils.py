@@ -63,3 +63,16 @@ def select_device(device='', batch_size=None):
 
 	logger.info(s.encode().decode('ascii', 'ignore') if platform.system() == 'Windows' else s)  # emoji-safe
 	return torch.device('cuda:0' if cuda else 'cpu')
+
+def git_describe(path=Path(__file__).parent):  # path must be a directory
+	# return human-readable git description, i.e. v5.0-5-g3e25f1e https://git-scm.com/docs/git-describe
+	s = f'git -C {path} describe --tags --long --always'
+	try:
+		return subprocess.check_output(s, shell=True, stderr=subprocess.STDOUT).decode()[:-1]
+	except subprocess.CalledProcessError as e:
+		return ''  # not a git repository
+
+def date_modified(path=__file__):
+	# return human-readable file modification date, i.e. '2021-3-26'
+	t = datetime.datetime.fromtimestamp(Path(path).stat().st_mtime)
+	return f'{t.year}-{t.month}-{t.day}'

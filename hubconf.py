@@ -5,21 +5,16 @@ Usage:
 	model = torch.hub.load('repo','model')
 """
 
-# Structure learned heavily akhaliq's yolov7 hubconf. Thanks!
+# Learned straight from YoloV7's hubconf.
 
 from pathlib import Path
 
 import torch
 
-from models.yolo import Model
-from utils.general import check_requirements, set_logging
-from utils.google_utils import attempt_download
-from utils.torch_utils import select_device
+from utils import select_device
+from utils import attempt_download
 
 dependencies = ['torch', 'yaml']
-check_requirements(Path(__file__).parent / 'requirements.txt', exclude=('pycocotools', 'thop'))
-set_logging()
-
 
 def create(name, pretrained, channels, classes, autoshape):
 	"""Creates a specified model
@@ -33,21 +28,22 @@ def create(name, pretrained, channels, classes, autoshape):
 		pytorch model
 	"""
 	try:
-		cfg = list((Path(__file__).parent / 'cfg').rglob(f'{name}.yaml'))[0]  # model.yaml path
-		model = Model(cfg, channels, classes)
-		if pretrained:
-			fname = f'{name}.pt'  # checkpoint filename
-			attempt_download(fname, repo="chrisgilldc/delv")  # download if not found locally
-			ckpt = torch.load(fname, map_location=torch.device('cpu'))  # load
-			msd = model.state_dict()  # model state_dict
-			csd = ckpt['model'].float().state_dict()  # checkpoint state_dict as FP32
-			csd = {k: v for k, v in csd.items() if msd[k].shape == v.shape}  # filter
-			model.load_state_dict(csd, strict=False)  # load
-			if len(ckpt['model'].names) == classes:
-				model.names = ckpt['model'].names  # set class names attribute
-			if autoshape:
-				model = model.autoshape()  # for file/URI/PIL/cv2/np inputs and NMS
-		device = select_device('0' if torch.cuda.is_available() else 'cpu')  # default to GPU if available
+		# Set the device to use, GPU if available, CPU otherwise.
+		device = select_device('0' if torch.cuda.is_available() else 'cpu')
+		# Create the baseline Yolov7 model.
+		model = torch.hub.load('WongKinYiu/yolov7', 'yolov7', classes=classes, channels=channels)
+		# Load the custom weights.
+		fname = f'{name}.pt'  # checkpoint filename
+		attempt_download(fname, repo="chrisgilldc/delv")  # download if not found locally
+		ckpt = torch.load(fname, map_location=torch.device('cpu'))
+		msd = model.state_dict()  # model state_dict
+		csd = ckpt['model'].float().state_dict()  # checkpoint state_dict as FP32
+		csd = {k: v for k, v in csd.items() if msd[k].shape == v.shape}  # filter
+		model.load_state_dict(csd, strict=False)  # load
+		if len(ckpt['model'].names) == classes:
+			model.names = ckpt['model'].names  # set class names attribute
+		if autoshape:
+			model = model.autoshape()  # for file/URI/PIL/cv2/np inputs and NMS
 		return model.to(device)
 
 	except Exception as e:

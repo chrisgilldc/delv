@@ -2,6 +2,8 @@
 Utilities, borrowed from Yolov7
 """
 
+from pathlib import Path
+
 # Adapted version of yolov7's attempt_download
 def attempt_download(file, repo='chrisgilldc/delv'):
 	# Attempt file download if does not exist

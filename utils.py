@@ -9,12 +9,12 @@ def attempt_download(file, repo='chrisgilldc/delv'):
 
 	if not file.exists():
 		try:
-		response = requests.get(f'https://api.github.com/repos/{repo}/releases/latest').json()  # github api
-		assets = [x['name'] for x in response['assets']]  # release assets
-		tag = response['tag_name']  # i.e. 'v1.0'
-	except:  # fallback plan
-		assets = ['dv2aug2.pt']
-		tag = subprocess.check_output('git tag', shell=True).decode().split()[-1]
+			response = requests.get(f'https://api.github.com/repos/{repo}/releases/latest').json()  # github api
+			assets = [x['name'] for x in response['assets']]  # release assets
+			tag = response['tag_name']  # i.e. 'v1.0'
+		except:  # fallback plan
+			assets = ['dv2aug2.pt']
+			tag = subprocess.check_output('git tag', shell=True).decode().split()[-1]
 
 	name = file.name
 	if name in assets:

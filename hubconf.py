@@ -22,33 +22,33 @@ set_logging()
 
 
 def create(name, pretrained, channels, classes, autoshape):
-    """Creates a specified model
-    Arguments:
-        name (str): name of model, i.e. 'yolov7'
-        pretrained (bool): load pretrained weights into the model
-        channels (int): number of input channels
-        classes (int): number of model classes
-    Returns:
-        pytorch model
-    """
-    try:
-	cfg = list((Path(__file__).parent / 'cfg').rglob(f'{name}.yaml'))[0]  # model.yaml path
-	model = Model(cfg, channels, classes)
-	if pretrained:
-		fname = f'{name}.pt'  # checkpoint filename
-		attempt_download(fname, repo="chrisgilldc/delv")  # download if not found locally
-		ckpt = torch.load(fname, map_location=torch.device('cpu'))  # load
-		msd = model.state_dict()  # model state_dict
-		csd = ckpt['model'].float().state_dict()  # checkpoint state_dict as FP32
-		csd = {k: v for k, v in csd.items() if msd[k].shape == v.shape}  # filter
-		model.load_state_dict(csd, strict=False)  # load
-		if len(ckpt['model'].names) == classes:
-			model.names = ckpt['model'].names  # set class names attribute
-		if autoshape:
-			model = model.autoshape()  # for file/URI/PIL/cv2/np inputs and NMS
+	"""Creates a specified model
+		Arguments:
+		name (str): name of model, i.e. 'yolov7'
+		pretrained (bool): load pretrained weights into the model
+		channels (int): number of input channels
+		classes (int): number of model classes
 
-	device = select_device('0' if torch.cuda.is_available() else 'cpu')  # default to GPU if available
-	return model.to(device)
+	Returns:
+		pytorch model
+	"""
+	try:
+		cfg = list((Path(__file__).parent / 'cfg').rglob(f'{name}.yaml'))[0]  # model.yaml path
+		model = Model(cfg, channels, classes)
+		if pretrained:
+			fname = f'{name}.pt'  # checkpoint filename
+			attempt_download(fname, repo="chrisgilldc/delv")  # download if not found locally
+			ckpt = torch.load(fname, map_location=torch.device('cpu'))  # load
+			msd = model.state_dict()  # model state_dict
+			csd = ckpt['model'].float().state_dict()  # checkpoint state_dict as FP32
+			csd = {k: v for k, v in csd.items() if msd[k].shape == v.shape}  # filter
+			model.load_state_dict(csd, strict=False)  # load
+			if len(ckpt['model'].names) == classes:
+				model.names = ckpt['model'].names  # set class names attribute
+			if autoshape:
+				model = model.autoshape()  # for file/URI/PIL/cv2/np inputs and NMS
+		device = select_device('0' if torch.cuda.is_available() else 'cpu')  # default to GPU if available
+		return model.to(device)
 
 	except Exception as e:
 		s = 'Cache maybe be out of date, try force_reload=True.'

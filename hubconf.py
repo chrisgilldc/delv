@@ -17,6 +17,7 @@ def _delv(model, pretrained=True, channels=3, classes=4, autoshape=True):
     if model not in valid_models:
         raise ValueError("{} is not a valid model name.".format(model))
     # Build the file name.
+    print("Loading delivery vehicles model: {}".format(model))
     dv_file = Path(model).with_suffix('.pt')
     # If the file doesn't exist, download it.
     if not dv_file.exists():
@@ -28,7 +29,6 @@ def _delv(model, pretrained=True, channels=3, classes=4, autoshape=True):
     zipfile.ZipFile("yolov7.zip").extractall()
     # Extend the system search path.
     sys.path.append(str(Path.cwd() / "yolov7-main"))
-    print("New system path: {}".format(sys.path))
     # Now we can import the Yolo model.
     from models.yolo import Model
 

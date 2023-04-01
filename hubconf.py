@@ -9,7 +9,6 @@ import torch
 from pathlib import Path
 import zipfile
 import sys
-import os
 
 dependencies = ['torch', 'yaml']
 
@@ -31,8 +30,6 @@ def _delv(model, pretrained=True, channels=3, classes=4, autoshape=True):
         yolov7_url = "https://github.com/WongKinYiu/yolov7/archive/refs/heads/main.zip"
         torch.hub.download_url_to_file(yolov7_url, "yolov7.zip")
         zipfile.ZipFile("yolov7.zip").extractall()
-        # Clean up the archive.
-        os.remote("yolov7.zip")
     # Extend the system path so imports will work properly.
     sys.path.append(str(yolov7_dir))
     # Now we can import the Yolo model.

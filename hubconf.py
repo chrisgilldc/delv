@@ -13,7 +13,7 @@ import sys
 dependencies = ['torch', 'yaml']
 
 def _delv(model, pretrained=True, channels=3, classes=4, autoshape=True):
-    valid_models = ('dv1_100', 'dv1_200', 'dv1a1_100', 'dv1a1_200', 'dv1a1_500')
+    valid_models = ('dv1_100', 'dv1_200', 'dv1a1_100', 'dv1a1_200', 'dv1a1_500', 'dv2a1_300')
 
     if model not in valid_models:
         raise ValueError("{} is not a valid model name.".format(model))
@@ -55,3 +55,6 @@ def dv1a1_200(pretrained=True, channels=3, classes=4, autoshape=True):
 
 def dv1a1_500(pretrained=True, channels=3, classes=4, autoshape=True):
     return _delv('dv1a1_500', pretrained, channels, classes, autoshape)
+
+def dv2a1_300(pretrained=True, channels=3, classes=4, autoshape=True):
+    return _delv('dv2a1_300', pretrained, channels, classes, autoshape)        

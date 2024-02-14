@@ -22,7 +22,7 @@ def _delv(model, pretrained=True, channels=3, classes=4, autoshape=True):
     dv_file = Path(model).with_suffix('.pt')
     # If the file doesn't exist, download it.
     if not dv_file.exists():
-        dv_url = f"https://github.com/chrisgilldc/delv/releases/download/0.3-alpha/{dv_file}"
+        dv_url = f"https://github.com/chrisgilldc/delv/releases/latest/download/{dv_file}"
         torch.hub.download_url_to_file(dv_url, dv_file)
     # Download the yolov7 archive.
     yolov7_dir = Path.cwd() / 'yolov7-main'
